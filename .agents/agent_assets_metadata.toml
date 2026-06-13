@@ -1,0 +1,20 @@
+uploads = []
+outputs = []
+
+[[generated]]
+id = "ozcNK8dG16_pX8X5g8BpX"
+uri = "file://artifacts/epic-magazine/public/hero-bg.png"
+type = "image"
+title = "hero background youth church"
+
+[[generated]]
+id = "1Vigo7yXnfi1gAiDjTIE6"
+uri = "file://artifacts/epic-magazine/public/about-mission.png"
+type = "image"
+title = "about mission youth friends"
+
+[[generated]]
+id = "2vrkJdPcFc7x0KZxLkwLW"
+uri = "file://artifacts/epic-magazine/public/impact-bg.png"
+type = "image"
+title = "impact community service"

@@ -1,15 +1,29 @@
 openapi: 3.1.0
 info:
-  # Do not change the title, if the title changes, the import paths will be broken
   title: Api
   version: 0.1.0
-  description: API specification
+  description: E.P.i.C. Youth Ministry Magazine API
 servers:
   - url: /api
     description: Base API path
 tags:
   - name: health
     description: Health operations
+  - name: magazines
+    description: Magazine issue operations
+  - name: team
+    description: Team member operations
+  - name: stories
+    description: Featured story operations
+  - name: events
+    description: Event operations
+  - name: opportunities
+    description: E.P.i.C. Impact opportunities
+  - name: contact
+    description: Contact and prayer request operations
+  - name: stats
+    description: Site-wide stats and summaries
+
 paths:
   /healthz:
     get:
@@ -24,6 +38,306 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/HealthStatus"
+
+  /magazines:
+    get:
+      operationId: listMagazines
+      tags: [magazines]
+      summary: List all magazine issues
+      parameters:
+        - name: limit
+          in: query
+          schema:
+            type: integer
+          description: Number of issues to return
+        - name: offset
+          in: query
+          schema:
+            type: integer
+          description: Offset for pagination
+      responses:
+        "200":
+          description: List of magazine issues
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Magazine"
+    post:
+      operationId: createMagazine
+      tags: [magazines]
+      summary: Create a magazine issue
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/MagazineInput"
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Magazine"
+
+  /magazines/latest:
+    get:
+      operationId: getLatestMagazine
+      tags: [magazines]
+      summary: Get the latest magazine issue
+      responses:
+        "200":
+          description: Latest magazine issue
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Magazine"
+
+  /magazines/{id}:
+    get:
+      operationId: getMagazine
+      tags: [magazines]
+      summary: Get a magazine issue by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Magazine issue
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Magazine"
+        "404":
+          description: Not found
+
+  /team:
+    get:
+      operationId: listTeamMembers
+      tags: [team]
+      summary: List all team members
+      responses:
+        "200":
+          description: List of team members
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TeamMember"
+
+  /team/{id}:
+    get:
+      operationId: getTeamMember
+      tags: [team]
+      summary: Get a team member by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Team member
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TeamMember"
+        "404":
+          description: Not found
+
+  /stories:
+    get:
+      operationId: listStories
+      tags: [stories]
+      summary: List featured stories
+      parameters:
+        - name: featured
+          in: query
+          schema:
+            type: boolean
+          description: Filter to featured stories only
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of stories
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Story"
+
+  /stories/{id}:
+    get:
+      operationId: getStory
+      tags: [stories]
+      summary: Get a story by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Story
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Story"
+        "404":
+          description: Not found
+
+  /events:
+    get:
+      operationId: listEvents
+      tags: [events]
+      summary: List upcoming events
+      parameters:
+        - name: upcoming
+          in: query
+          schema:
+            type: boolean
+          description: Filter to upcoming events only
+        - name: limit
+          in: query
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: List of events
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Event"
+
+  /events/{id}:
+    get:
+      operationId: getEvent
+      tags: [events]
+      summary: Get an event by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Event
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Event"
+        "404":
+          description: Not found
+
+  /opportunities:
+    get:
+      operationId: listOpportunities
+      tags: [opportunities]
+      summary: List E.P.i.C. Impact opportunities
+      parameters:
+        - name: category
+          in: query
+          schema:
+            type: string
+            enum: [volunteer, job, scholarship, internship, resource]
+          description: Filter by opportunity category
+      responses:
+        "200":
+          description: List of opportunities
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Opportunity"
+
+  /opportunities/{id}:
+    get:
+      operationId: getOpportunity
+      tags: [opportunities]
+      summary: Get an opportunity by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: Opportunity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Opportunity"
+        "404":
+          description: Not found
+
+  /prayer-requests:
+    post:
+      operationId: submitPrayerRequest
+      tags: [contact]
+      summary: Submit a prayer request
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/PrayerRequestInput"
+      responses:
+        "201":
+          description: Prayer request submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/PrayerRequest"
+
+  /contact:
+    post:
+      operationId: submitContact
+      tags: [contact]
+      summary: Submit a contact/question form
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/ContactInput"
+      responses:
+        "201":
+          description: Message submitted
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Contact"
+
+  /stats:
+    get:
+      operationId: getSiteStats
+      tags: [stats]
+      summary: Get site-wide impact stats
+      responses:
+        "200":
+          description: Site stats summary
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/SiteStats"
+
 components:
   schemas:
     HealthStatus:
@@ -34,3 +348,218 @@ components:
       required:
         - status
 
+    Magazine:
+      type: object
+      required: [id, title, edition, publishedAt, coverImageUrl]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        edition:
+          type: string
+          description: e.g. "Summer 2025", "Vol. 1 Issue 3"
+        publishedAt:
+          type: string
+          format: date
+        coverImageUrl:
+          type: string
+        pdfUrl:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        featured:
+          type: boolean
+
+    MagazineInput:
+      type: object
+      required: [title, edition, publishedAt, coverImageUrl]
+      properties:
+        title:
+          type: string
+        edition:
+          type: string
+        publishedAt:
+          type: string
+          format: date
+        coverImageUrl:
+          type: string
+        pdfUrl:
+          type: ["string", "null"]
+        description:
+          type: ["string", "null"]
+        featured:
+          type: boolean
+
+    TeamMember:
+      type: object
+      required: [id, name, role]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        role:
+          type: string
+        bio:
+          type: ["string", "null"]
+        photoUrl:
+          type: ["string", "null"]
+        department:
+          type: ["string", "null"]
+        socialLinks:
+          type: ["string", "null"]
+          description: JSON string of social links
+
+    Story:
+      type: object
+      required: [id, title, excerpt, category]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        excerpt:
+          type: string
+        content:
+          type: ["string", "null"]
+        category:
+          type: string
+        imageUrl:
+          type: ["string", "null"]
+        author:
+          type: ["string", "null"]
+        publishedAt:
+          type: ["string", "null"]
+          format: date
+        featured:
+          type: boolean
+
+    Event:
+      type: object
+      required: [id, title, date, location]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: ["string", "null"]
+        date:
+          type: string
+          format: date-time
+        location:
+          type: string
+        imageUrl:
+          type: ["string", "null"]
+        registrationUrl:
+          type: ["string", "null"]
+
+    Opportunity:
+      type: object
+      required: [id, title, category, description]
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        category:
+          type: string
+          enum: [volunteer, job, scholarship, internship, resource]
+        description:
+          type: string
+        organization:
+          type: ["string", "null"]
+        deadline:
+          type: ["string", "null"]
+          format: date
+        applyUrl:
+          type: ["string", "null"]
+        imageUrl:
+          type: ["string", "null"]
+        amount:
+          type: ["string", "null"]
+          description: For scholarships/jobs, the value or salary
+
+    PrayerRequestInput:
+      type: object
+      required: [name, request]
+      properties:
+        name:
+          type: string
+        email:
+          type: ["string", "null"]
+        request:
+          type: string
+        anonymous:
+          type: boolean
+
+    PrayerRequest:
+      type: object
+      required: [id, name, request, submittedAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: ["string", "null"]
+        request:
+          type: string
+        anonymous:
+          type: boolean
+        submittedAt:
+          type: string
+          format: date-time
+
+    ContactInput:
+      type: object
+      required: [name, email, message]
+      properties:
+        name:
+          type: string
+        email:
+          type: string
+        subject:
+          type: ["string", "null"]
+        message:
+          type: string
+
+    Contact:
+      type: object
+      required: [id, name, email, message, submittedAt]
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        email:
+          type: string
+        subject:
+          type: ["string", "null"]
+        message:
+          type: string
+        submittedAt:
+          type: string
+          format: date-time
+
+    SiteStats:
+      type: object
+      required: [totalMagazines, totalTeamMembers, totalStories, totalOpportunities, totalEvents]
+      properties:
+        totalMagazines:
+          type: integer
+        totalTeamMembers:
+          type: integer
+        totalStories:
+          type: integer
+        totalOpportunities:
+          type: integer
+        totalEvents:
+          type: integer
+        youthReached:
+          type: integer
+        volunteerHours:
+          type: integer
+        communitiesServed:
+          type: integer

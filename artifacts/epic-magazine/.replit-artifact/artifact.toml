@@ -1,0 +1,31 @@
+kind = "web"
+previewPath = "/"
+title = "E.P.i.C. Youth Ministry Magazine"
+version = "1.0.0"
+id = "artifacts/epic-magazine"
+router = "path"
+
+[[integratedSkills]]
+name = "react-vite"
+version = "1.0.0"
+
+[[services]]
+name = "web"
+paths = [ "/" ]
+localPort = 24895
+
+[services.development]
+run = "pnpm --filter @workspace/epic-magazine run dev"
+
+[services.production]
+build = [ "pnpm", "--filter", "@workspace/epic-magazine", "run", "build" ]
+publicDir = "artifacts/epic-magazine/dist/public"
+serve = "static"
+
+[[services.production.rewrites]]
+from = "/*"
+to = "/index.html"
+
+[services.env]
+PORT = "24895"
+BASE_PATH = "/"
